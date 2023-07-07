@@ -1,12 +1,22 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import {Chart as ChartJs} from 'chart.js/auto'
 import { Col, Row, Typography } from 'antd';
 
 const { Title } = Typography;
 
 export default function Linechart({ coinHistory, currentPrice, coinName }) {
-  const coinPrice = coinHistory?.data?.history.map((item) => item.price);
-  const coinTimestamp = coinHistory?.data?.history.map((item) => item.timestamp * 1000); // Convert to milliseconds
+  console.log(coinHistory)
+  const coinPrice = [];
+  const coinTimestamp = [];
+  for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
+    coinPrice.push(coinHistory?.data?.history[i].price);
+  }
+
+ 
+  for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
+    coinTimestamp.push(new Date(coinHistory?.data?.history[i].timestamp*1000).toLocaleDateString());
+  }
 
   const data = {
     labels: coinTimestamp,
@@ -21,22 +31,6 @@ export default function Linechart({ coinHistory, currentPrice, coinName }) {
     ],
   };
 
-  const options = {
-    scales: {
-      x: {
-        type: 'time', // Use time scale for the x-axis
-        time: {
-          unit: 'day', // Display labels by day
-          tooltipFormat: 'll', // Format for tooltip display
-        },
-      },
-      y: {
-        ticks: {
-          beginAtZero: true,
-        },
-      },
-    },
-  };
 
   return (
     <>
@@ -53,7 +47,7 @@ export default function Linechart({ coinHistory, currentPrice, coinName }) {
           </Title>
         </Col>
       </Row>
-      <Line data={data} options={options} />
+      <Line data={data} />
     </>
   );
 }

@@ -1,22 +1,52 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import HTMLReactParser from 'html-react-parser'
 import { useParams } from 'react-router-dom'
+import { useQueryClient } from 'react-query';
+import axios from 'axios'
 import millify from 'millify';
 import Loader from './Loader'
-// import Linechart from './Linechart';
+import Linechart from './Linechart';
 import { Col, Row, Typography, Select } from 'antd';
 import { useGetCryptoDetailsQuery,useGetCryptoHistoryQuery } from '../Services/cryptoApi';
 import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCircleOutlined, StopOutlined, TrophyOutlined, CheckOutlined, NumberOutlined, ThunderboltOutlined } from '@ant-design/icons'
 const {Title,Text}=Typography
 const {Option}=Select
 export default function CryptoDetails() {
+  const queryClient = useQueryClient();
   const {coinId}=useParams();
   const[Time,setTime]=useState("7d")
-  const {data,isFecthing}=useGetCryptoDetailsQuery(coinId)
-  const {data:coinHistory}=useGetCryptoHistoryQuery({coinId,Time})
-  console.log(coinHistory)
-  if(!data?.data?.coin ) return <Loader/>
-  const cryptoDetails=data?.data?.coin
+  console.log(Time)
+  const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+  const[coinHistory,setcoinHistory]=useState([]);
+  
+
+  useEffect(()=>{
+    const options = {
+      method: 'GET',
+      url: `https://coinranking1.p.rapidapi.com/coin/${coinId}/history`,
+      params: {
+        referenceCurrencyUuid: 'yhjMzLPhuIDl',
+        timePeriod: Time
+      },
+      headers: {
+        'X-RapidAPI-Key': '1f6a9db988msha0faaf742b4e34ep1362f1jsna692f3c4e0d1',
+        'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
+      }
+    };
+    axios.request(options).then((res)=>{
+      setcoinHistory(res.data)
+
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },[Time,coinId])
+
+
+  
+ 
+  
+  if (isFetching) return <Loader />;
+  const cryptoDetails = data?.data?.coin;
   const volume=cryptoDetails['24hVolume']
  
   
@@ -46,15 +76,15 @@ export default function CryptoDetails() {
           View value statistics, market cap and supply
         </p>
       </Col>
-      {/* <Select defaultValue={"7d"}
+      <Select defaultValue={"7d"}
       placeholder="Select-Time Period"
       className='select-timeperiod'
       onChange={(value)=>setTime(value)}>
         {time.map((date)=>{
           return <Option key={date}>{date}</Option>
         })}
-         </Select> */}
-         {/* <Linechart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name}/> */}
+         </Select>
+         <Linechart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name}/>
 
          <Col className='stats-container'>
          <Col className="coin-value-statistics">
