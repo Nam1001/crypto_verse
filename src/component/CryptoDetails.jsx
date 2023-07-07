@@ -1,18 +1,16 @@
 import React,{useEffect, useState} from 'react'
 import HTMLReactParser from 'html-react-parser'
 import { useParams } from 'react-router-dom'
-import { useQueryClient } from 'react-query';
 import axios from 'axios'
 import millify from 'millify';
 import Loader from './Loader'
 import Linechart from './Linechart';
 import { Col, Row, Typography, Select } from 'antd';
-import { useGetCryptoDetailsQuery,useGetCryptoHistoryQuery } from '../Services/cryptoApi';
+import { useGetCryptoDetailsQuery} from '../Services/cryptoApi';
 import { MoneyCollectOutlined, DollarCircleOutlined, FundOutlined, ExclamationCircleOutlined, StopOutlined, TrophyOutlined, CheckOutlined, NumberOutlined, ThunderboltOutlined } from '@ant-design/icons'
 const {Title,Text}=Typography
 const {Option}=Select
 export default function CryptoDetails() {
-  const queryClient = useQueryClient();
   const {coinId}=useParams();
   const[Time,setTime]=useState("7d")
   console.log(Time)
@@ -142,7 +140,7 @@ export default function CryptoDetails() {
             {cryptoDetails.links.map((link)=>(
               <Row className='coin-link' key={link.url}>
                 <Title level={5} className='link-name'>{link.name}</Title>
-                <a href={link.url} target='_blank' rel=''>{link.url}</a>
+                <a href={link.url} target='_blank' rel='noreferrer'>{link.url}</a> 
 
               </Row>
             ))}
