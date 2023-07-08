@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import millify from 'millify';
 
 export default function Cryptocurrencies({ simplified }) {
-  const count = simplified ? 10 : 20;
+  const count = simplified ? 10 : 300;
   const { data, isFetching } = useGetCryptoQuery(count);
   const [cryptos, setCryptos] = useState([]);
   const [search, setSearch] = useState('');
@@ -31,7 +31,7 @@ export default function Cryptocurrencies({ simplified }) {
                 extra={<img className="crypto-image" src={currency.iconUrl} alt="" />}
                 hoverable
               >
-                <p>Price : {millify(currency.price)} USD</p>
+                <p>Price : {millify(currency.price)==0 ?parseFloat((Number(currency.price)).toFixed(8)):millify(currency.price)} USD</p>
                 <p>Market Cap : {millify(currency.marketCap)}</p>
                 <p>Daily Change : {millify(currency.change)}%</p>
               </Card>

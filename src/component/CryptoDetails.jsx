@@ -51,7 +51,7 @@ export default function CryptoDetails() {
   const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
  
   const stats = [
-    { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined /> },
+    { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)==0 ? parseFloat((Number(cryptoDetails.price)).toFixed(8)) : millify(cryptoDetails.price)}`, icon: <DollarCircleOutlined /> },
     { title: 'Rank', value: cryptoDetails?.rank, icon: <NumberOutlined /> },
     { title: '24h Volume', value: `$ ${volume && millify(volume)}`, icon: <ThunderboltOutlined /> },
     { title: 'Market Cap', value: `$ ${cryptoDetails?.marketCap && millify(cryptoDetails?.marketCap)}`, icon: <DollarCircleOutlined /> },
@@ -82,7 +82,7 @@ export default function CryptoDetails() {
           return <Option key={date}>{date}</Option>
         })}
          </Select>
-         <Linechart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)} coinName={cryptoDetails.name}/>
+         <Linechart coinHistory={coinHistory} currentPrice={millify(cryptoDetails.price)==0 ? parseFloat((Number(cryptoDetails.price)).toFixed(8)):millify(cryptoDetails.price)} coinName={cryptoDetails.name}/>
 
          <Col className='stats-container'>
          <Col className="coin-value-statistics">
